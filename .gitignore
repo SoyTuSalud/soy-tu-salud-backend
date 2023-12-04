@@ -1,0 +1,27 @@
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Local
+.env*
+dist
+coverage
+.webpack
+
+# yarn !zero-installs
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# nodejs
+node_modules
+
+# misc
+.DS_Store
