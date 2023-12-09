@@ -2,9 +2,9 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { Patient } from './schemas/patient.schema';
-import { UpdatePatientDto } from './dto/update-patient.dto';
-import { CreatePatientDto } from './dto/create-patient.dto';
+import { Patient } from '../schemas/patient.schema';
+import { UpdatePatientDto } from '../dto/update-patient.dto';
+import { CreatePatientDto } from '../dto/create-patient.dto';
 
 @Injectable()
 export class PatientsService {
@@ -17,18 +17,18 @@ export class PatientsService {
   }
 
   async findAll(): Promise<Patient[]> {
-    return this.patientModel.find().exec();
+    return await this.patientModel.find().exec();
   }
 
   async findById(id: string): Promise<Patient> {
-    return this.patientModel.findOne({ id }).exec();
+    return await this.patientModel.findById(id).exec();
   }
 
   async update(id: string, patient: UpdatePatientDto): Promise<Patient> {
-    return this.patientModel.findOneAndUpdate({ id }, patient).exec();
+    return await this.patientModel.findByIdAndUpdate(id, patient).exec();
   }
 
   async delete(id: string) {
-    return await this.patientModel.findOneAndDelete({ id }).exec();
+    return await this.patientModel.findByIdAndDelete(id).exec();
   }
 }

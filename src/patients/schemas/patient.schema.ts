@@ -1,11 +1,12 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { Gender } from '../enums/gender.enum';
-import { Address } from '@/common/interfaces/address.interface';
-import { DocumentType } from '@/common/enums/documentType.enum';
+import { Gender } from '../constants/gender.constants';
+import { DocumentType } from '@/common/constants/documentType.constants';
+import { PatientType } from '../constants/patient.constants';
+import { Address, AddressSchema } from '@/common/schemas/address.schema';
 
-@Schema()
+@Schema({ _id: false, discriminatorKey: 'patientType' })
 export class Patient {
   @Prop({ required: true })
   firstName: string;
@@ -37,7 +38,7 @@ export class Patient {
   @Prop()
   photo: string;
 
-  @Prop(Object)
+  @Prop({ type: AddressSchema, required: true })
   address: Address;
 
   // --------- IDENTIFICATION ---------
@@ -62,6 +63,9 @@ export class Patient {
 
   @Prop()
   clinicalHistory: string;
+
+  @Prop({ required: true, enum: PatientType, default: PatientType.MOTHER })
+  patientType: string;
 }
 
 export type PatientDocument = HydratedDocument<Patient>;
