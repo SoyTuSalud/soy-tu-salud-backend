@@ -1,10 +1,10 @@
-import tsEslint from '@typescript-eslint/eslint-plugin'
-import tsParser from '@typescript-eslint/parser'
-import jest from 'eslint-plugin-jest'
-import prettier from 'eslint-plugin-prettier'
-import globals from 'globals'
+const tsEslint = require('@typescript-eslint/eslint-plugin');
+const tsParser = require('@typescript-eslint/parser');
+const jest = require('eslint-plugin-jest');
+const prettier = require('eslint-plugin-prettier');
+const globals = require('globals');
 
-export default [
+module.exports = [
   {
     files: ['src/**/*.{ts}'],
     plugins: {
@@ -37,4 +37,4 @@ export default [
       '@typescript-eslint/no-explicit-any': 'off'
     }
   }
-]
+];
