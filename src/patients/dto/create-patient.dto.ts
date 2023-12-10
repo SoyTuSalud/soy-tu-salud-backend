@@ -1,41 +1,80 @@
-import { Address } from '@/common/interfaces/address.interface';
 import { DocumentType } from '../../common/constants/documentType.constants';
 import { PatientType } from '../constants/patient.constants';
-import { ApiProperty } from '@nestjs/swagger';
+import { AddressDto } from '@/common/dto/address.dto';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateNested
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { Gender } from '../constants/gender.constants';
 
 export class CreatePatientDto {
-  @ApiProperty()
-  readonly patientType: PatientType;
-  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
   readonly firstName: string;
-  @ApiProperty()
-  readonly lastName: string;
-  @ApiProperty()
-  readonly documentType: DocumentType;
-  @ApiProperty()
-  readonly id: string;
-  @ApiProperty()
-  readonly phone: string;
-  @ApiProperty()
-  readonly email: string;
-  @ApiProperty()
-  readonly dob?: string;
-  @ApiProperty()
-  readonly photo?: string;
-  @ApiProperty()
-  readonly address?: Address;
 
-  @ApiProperty()
-  readonly gender?: string;
-  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly lastName: string;
+
+  @IsEnum(DocumentType)
+  @IsNotEmpty()
+  readonly documentType: DocumentType;
+
+  @IsString()
+  @IsNotEmpty()
+  readonly documentId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  readonly phone: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  readonly email: string;
+
+  @IsString()
+  @IsOptional()
+  readonly dob?: string;
+
+  @IsString()
+  @IsOptional()
+  readonly photo?: string;
+
+  @Type(() => AddressDto)
+  @ValidateNested()
+  @IsNotEmpty()
+  readonly address: AddressDto;
+
+  @IsEnum(Gender)
+  @IsOptional()
+  readonly gender?: Gender;
+
+  @IsString()
+  @IsOptional()
   readonly genderIdentity?: string;
-  @ApiProperty()
+
+  @IsString()
+  @IsOptional()
   readonly sexualOrientation?: string;
 
-  @ApiProperty()
+  @IsString()
+  @IsOptional()
   readonly populationGroup?: string;
-  @ApiProperty()
+
+  @IsString()
+  @IsOptional()
   readonly sisben?: string;
-  @ApiProperty()
+
+  @IsString()
+  @IsOptional()
   readonly eps?: string;
+
+  @IsEnum(PatientType)
+  @IsOptional()
+  readonly patientType: PatientType;
 }

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { Mother } from '../schemas/mother.schema';
+import { Mother } from './schemas/mother.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateMotherDto } from '../dto/create-mother.dto';
-import { UpdateMotherDto } from '../dto/update-mother.dto';
+import { CreateMotherDto } from './dto/create-mother.dto';
+import { UpdateMotherDto } from './dto/update-mother.dto';
 
 @Injectable()
-export class MotherService {
+export class MothersService {
   constructor(
     @InjectModel(Mother.name) private readonly motherModel: Model<Mother>
   ) {}
@@ -20,15 +20,17 @@ export class MotherService {
   }
 
   async findById(id: string): Promise<Mother> {
-    return await this.motherModel.findById(id).exec();
+    return await this.motherModel.findOne({ documentId: id }).exec();
   }
 
   async update(id: string, mother: UpdateMotherDto): Promise<Mother> {
-    return await this.motherModel.findByIdAndUpdate(id, mother).exec();
+    return await this.motherModel
+      .findOneAndUpdate({ documentId: id }, mother)
+      .exec();
   }
 
   async delete(id: string) {
-    return await this.motherModel.findByIdAndDelete(id).exec();
+    return await this.motherModel.findOneAndDelete({ documentId: id }).exec();
   }
 }
 

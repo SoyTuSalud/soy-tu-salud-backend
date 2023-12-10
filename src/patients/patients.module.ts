@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { PatientsController } from './controllers/patients.controller';
+import { PatientsController } from './patients.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Patient, PatientSchema } from './schemas/patient.schema';
-import { PatientsService } from './services/patients.service';
-import { MotherController } from './controllers/mother.controller';
-import { MotherService } from './services/mother.service';
-import { Mother, MotherSchema } from './schemas/mother.schema';
+import { PatientsService } from './patients.service';
+import { MotherController } from './mothers/mothers.controller';
+import { MothersService } from './mothers/mothers.service';
+import { Mother, MotherSchema } from './mothers/schemas/mother.schema';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { Mother, MotherSchema } from './schemas/mother.schema';
       }
     ])
   ],
-  providers: [PatientsService, MotherService],
+  providers: [PatientsService, MothersService],
   controllers: [PatientsController, MotherController]
 })
 export class PatientsModule {}

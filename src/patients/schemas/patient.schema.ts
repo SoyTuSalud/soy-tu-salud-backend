@@ -1,10 +1,10 @@
-import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { Gender } from '../constants/gender.constants';
 import { DocumentType } from '@/common/constants/documentType.constants';
 import { PatientType } from '../constants/patient.constants';
 import { Address, AddressSchema } from '@/common/schemas/address.schema';
+import { Document } from 'mongoose';
 
 @Schema({ _id: false, discriminatorKey: 'patientType' })
 export class Patient {
@@ -18,7 +18,7 @@ export class Patient {
   documentType: string;
 
   @Prop({ required: true, index: { unique: true } })
-  id: string;
+  documentId: string;
 
   @Prop({ required: true, validate: /^\d{10}$/ })
   phone: string;
@@ -64,10 +64,10 @@ export class Patient {
   @Prop()
   clinicalHistory: string;
 
-  @Prop({ required: true, enum: PatientType, default: PatientType.MOTHER })
+  @Prop({ required: true, enum: PatientType })
   patientType: string;
 }
 
-export type PatientDocument = HydratedDocument<Patient>;
+export type PatientDocument = Patient & Document;
 
 export const PatientSchema = SchemaFactory.createForClass(Patient);

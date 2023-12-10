@@ -1,3 +1,3 @@
 export enum PatientType {
-  MOTHER = 'MOTHER'
+  MOTHER = 'Mother'
 }

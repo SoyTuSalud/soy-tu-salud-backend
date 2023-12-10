@@ -1,4 +1,4 @@
-export interface MotherForm {
+export class MotherFormDto {
   lastMenstruationDate: Date;
   prenatalControl: boolean;
   background: boolean; // ?
