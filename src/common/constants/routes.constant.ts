@@ -1,5 +1,5 @@
 export const routes = {
-  base_url: 'api',
+  base_url: 'api/v1',
   patients: {
     prefix: 'patients',
     get_all: '',
