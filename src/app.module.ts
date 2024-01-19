@@ -8,7 +8,6 @@ import { UserModule } from './user/user.module';
 import { APP_PIPE } from '@nestjs/core';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
-import { TokenModule } from './token/token.module';
 
 @Module({
   imports: [
@@ -25,8 +24,7 @@ import { TokenModule } from './token/token.module';
     }),
     AuthModule,
     UserModule,
-    MotherModule,
-    TokenModule
+    MotherModule
   ],
   providers: [
     {

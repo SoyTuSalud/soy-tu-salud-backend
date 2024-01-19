@@ -17,20 +17,18 @@ export class MotherService {
   }
 
   async findById(id: string): Promise<Mother> {
-    return await this.motherModel.findOne({ documentId: id }).exec();
+    return await this.motherModel.findOne({ _id: id }).exec();
   }
 
-  async create(mother: CreateMotherDto): Promise<Mother> {
-    return await this.motherModel.create(mother);
+  async create(id: string, mother: CreateMotherDto): Promise<Mother> {
+    return await this.motherModel.create({ _id: id, ...mother });
   }
 
   async update(id: string, mother: UpdateMotherDto): Promise<Mother> {
-    return await this.motherModel
-      .findOneAndUpdate({ documentId: id }, mother)
-      .exec();
+    return await this.motherModel.findOneAndUpdate({ _id: id }, mother).exec();
   }
 
   async delete(id: string) {
-    return await this.motherModel.findOneAndDelete({ documentId: id }).exec();
+    return await this.motherModel.findOneAndDelete({ _id: id }).exec();
   }
 }

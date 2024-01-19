@@ -3,12 +3,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Gender } from '../constants/gender.constants';
 import { DocumentType } from '@/common/constants/documentType.constants';
 import { Address, AddressSchema } from '@/common/schemas/address.schema';
-import { Document, ObjectId } from 'mongoose';
+import { Document } from 'mongoose';
 import { MotherForm, MotherFormSchema } from './mother-form.schema';
 
 @Schema()
 export class Mother {
-  _id: ObjectId;
+  _id: string;
 
   @Prop({ required: true })
   firstName: string;

@@ -2,12 +2,11 @@ import { Role } from '@/user/constants/role.constants';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { AccountStatus } from '@/user/constants/accountStatus.constant';
 import { AutoMap } from '@automapper/classes';
-import { ObjectId } from 'mongoose';
 
 @Schema()
 export class User {
   @AutoMap()
-  _id: ObjectId;
+  _id: string;
 
   @AutoMap()
   @Prop({ required: true, enum: Role })

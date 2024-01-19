@@ -27,8 +27,8 @@ export class MotherController {
   }
 
   @Post(routes.mothers.create)
-  async create(@Body() mother: CreateMotherDto) {
-    return this.motherService.create(mother);
+  async create(@Body() id: string, @Body() mother: CreateMotherDto) {
+    return this.motherService.create(id, mother);
   }
 
   @Patch(routes.mothers.update)

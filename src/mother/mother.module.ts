@@ -14,7 +14,8 @@ import { MotherService } from './mother.service';
     ])
   ],
   providers: [MotherService],
-  controllers: [MotherController]
+  controllers: [MotherController],
+  exports: [MotherService]
 })
 export class MotherModule {}
 

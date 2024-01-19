@@ -1,8 +1,8 @@
 export enum Role {
+  ADMIN = 'ADMIN',
   MOTHER = 'MOTHER',
   PHILANTHROPIST = 'PHILANTHROPIST',
-  PROVIDER = 'PROVIDER',
-  ADMIN = 'ADMIN'
+  PROVIDER = 'PROVIDER'
 }
 
 /**
