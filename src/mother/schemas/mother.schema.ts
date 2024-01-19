@@ -2,12 +2,14 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { Gender } from '../constants/gender.constants';
 import { DocumentType } from '@/common/constants/documentType.constants';
-import { PatientType } from '../constants/patient.constants';
 import { Address, AddressSchema } from '@/common/schemas/address.schema';
-import { Document } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
+import { MotherForm, MotherFormSchema } from './mother-form.schema';
 
-@Schema({ _id: false, discriminatorKey: 'patientType' })
-export class Patient {
+@Schema()
+export class Mother {
+  _id: ObjectId;
+
   @Prop({ required: true })
   firstName: string;
 
@@ -64,10 +66,10 @@ export class Patient {
   @Prop()
   clinicalHistory: string;
 
-  @Prop({ required: true, enum: PatientType })
-  patientType: string;
+  @Prop({ type: MotherFormSchema })
+  medicalInfo: MotherForm;
 }
 
-export type PatientDocument = Patient & Document;
+export type MotherDocument = Mother & Document;
 
-export const PatientSchema = SchemaFactory.createForClass(Patient);
+export const MotherSchema = SchemaFactory.createForClass(Mother);

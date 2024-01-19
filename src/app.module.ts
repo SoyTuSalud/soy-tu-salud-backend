@@ -2,12 +2,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Module, ValidationPipe } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { PatientsModule } from '@/patients/patients.module';
+import { MotherModule } from '@/mother/mother.module';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
 import { APP_PIPE } from '@nestjs/core';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
+import { TokenModule } from './token/token.module';
 
 @Module({
   imports: [
@@ -23,8 +24,9 @@ import { classes } from '@automapper/classes';
       strategyInitializer: classes()
     }),
     AuthModule,
-    UsersModule,
-    PatientsModule
+    UserModule,
+    MotherModule,
+    TokenModule
   ],
   providers: [
     {

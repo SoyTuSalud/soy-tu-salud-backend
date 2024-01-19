@@ -11,8 +11,9 @@ import { SignInDto } from '@/auth/dto/sign-in.dto';
 import { Public } from '@/common/decorators/public.decorator';
 import { SignUpDto } from './dto/sign-up.dto';
 import { MapInterceptor } from '@automapper/nestjs';
-import { User } from '@/users/schemas/user.schema';
-import { UserDto } from '@/users/dto/user.dto';
+import { User } from '@/user/schemas/user.schema';
+import { UserDto } from '@/user/dto/user.dto';
+import { routes } from '@/common/constants/routes.constant';
 
 @Controller('auth')
 export class AuthController {
@@ -20,7 +21,7 @@ export class AuthController {
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Post('signup')
+  @Post(routes.auth.sign_up)
   @UseInterceptors(MapInterceptor(User, UserDto))
   signUp(@Body() signUpDto: SignUpDto) {
     return this.authService.signUp(signUpDto);
@@ -28,7 +29,7 @@ export class AuthController {
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Post('login')
+  @Post(routes.auth.sign_up)
   signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto);
   }

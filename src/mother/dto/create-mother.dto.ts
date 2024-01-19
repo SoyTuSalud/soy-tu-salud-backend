@@ -1,5 +1,4 @@
-import { DocumentType } from '../../common/constants/documentType.constants';
-import { PatientType } from '../constants/patient.constants';
+import { DocumentType } from '@/common/constants/documentType.constants';
 import { AddressDto } from '@/common/dto/address.dto';
 import {
   IsEmail,
@@ -11,8 +10,9 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Gender } from '../constants/gender.constants';
+import { MotherFormDto } from './mother-form.dto';
 
-export class CreatePatientDto {
+export class CreateMotherDto {
   @IsString()
   @IsNotEmpty()
   readonly firstName: string;
@@ -74,7 +74,8 @@ export class CreatePatientDto {
   @IsOptional()
   readonly eps?: string;
 
-  @IsEnum(PatientType)
+  @Type(() => MotherFormDto)
+  @ValidateNested()
   @IsOptional()
-  readonly patientType: PatientType;
+  readonly medicalInfo: MotherFormDto;
 }

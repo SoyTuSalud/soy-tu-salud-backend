@@ -1,5 +1,11 @@
 export const routes = {
   base_url: 'api/v1',
+  auth: {
+    prefix: 'auth',
+    sign_up: 'signup',
+    sign_in: 'signin',
+    verify: 'verify'
+  },
   patients: {
     prefix: 'patients',
     get_all: '',

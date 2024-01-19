@@ -1,4 +1,4 @@
-import { UsersService } from '@/users/users.service';
+import { UserService } from '@/user/user.service';
 import {
   BadRequestException,
   Injectable,
@@ -8,27 +8,24 @@ import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
-import { UserDto } from '@/users/dto/user.dto';
-import { User } from '@/users/schemas/user.schema';
+import { User } from '@/user/schemas/user.schema';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly userService: UserService,
     private readonly jwtService: JwtService
   ) {}
 
   async signUp(signUpDto: SignUpDto): Promise<User> {
-    const existingUser = await this.usersService.findOneByEmail(
-      signUpDto.email
-    );
+    const existingUser = await this.userService.findOneByEmail(signUpDto.email);
     if (existingUser) {
       throw new BadRequestException(
         `An account with the email address ${signUpDto.email} already exists.`
       );
     }
 
-    const user = await this.usersService.create({
+    const user = await this.userService.create({
       ...signUpDto,
       password: await bcrypt.hash(signUpDto.password, 10)
     });
@@ -37,7 +34,7 @@ export class AuthService {
   }
 
   async signIn(signInDto: SignInDto): Promise<any> {
-    const user = await this.usersService.findOneByEmail(signInDto.email);
+    const user = await this.userService.findOneByEmail(signInDto.email);
 
     const passwordMatch = await this.validatePassword(
       signInDto.password,
@@ -51,7 +48,7 @@ export class AuthService {
       role: user.role,
       email: user.email,
       accountStatus: user.accountStatus,
-      access_token: await this.createAccessToken({
+      access_token: await this.generateToken({
         sub: user.email,
         role: user.role,
         email: user.email,
@@ -64,7 +61,7 @@ export class AuthService {
     return await bcrypt.compare(match, password);
   }
 
-  async createAccessToken(payload: Payload) {
+  async generateToken(payload: Payload) {
     return await this.jwtService.signAsync(payload, { expiresIn: '6h' });
   }
 }

@@ -1,10 +1,14 @@
-import { Role } from '@/users/constants/role.constants';
+import { Role } from '@/user/constants/role.constants';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { AccountStatus } from '@/users/constants/accountStatus.constant';
+import { AccountStatus } from '@/user/constants/accountStatus.constant';
 import { AutoMap } from '@automapper/classes';
+import { ObjectId } from 'mongoose';
 
 @Schema()
 export class User {
+  @AutoMap()
+  _id: ObjectId;
+
   @AutoMap()
   @Prop({ required: true, enum: Role })
   role: string;
@@ -14,7 +18,8 @@ export class User {
     required: true,
     unique: true,
     lowercase: true,
-    trim: true
+    trim: true,
+    validate: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
   })
   email: string;
 
