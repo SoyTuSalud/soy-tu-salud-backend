@@ -8,6 +8,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
 import { MotherModule } from '@/mother/mother.module';
 import { RoleService } from './services/role.service';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [
@@ -30,6 +31,10 @@ import { RoleService } from './services/role.service';
     {
       provide: APP_GUARD,
       useClass: AuthGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard
     }
   ],
   controllers: [AuthController],

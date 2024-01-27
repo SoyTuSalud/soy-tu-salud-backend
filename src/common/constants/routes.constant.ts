@@ -6,8 +6,8 @@ export const routes = {
     sign_in: 'signin',
     verify: 'verify'
   },
-  patients: {
-    prefix: 'patients',
+  users: {
+    prefix: 'users',
     get_all: '',
     get: ':id',
     create: '',

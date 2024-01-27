@@ -49,6 +49,9 @@ export class AuthService {
 
   async signIn(signInDto: SignInDto): Promise<any> {
     const user = await this.userService.findOneByEmail(signInDto.email);
+    if (!user) {
+      throw new UnauthorizedException('Incorrect email or password');
+    }
 
     const passwordMatch = await this.validatePassword(
       signInDto.password,
@@ -62,7 +65,7 @@ export class AuthService {
       role: user.role,
       email: user.email,
       accountStatus: user.accountStatus,
-      access_token: await this.generateToken({
+      accessToken: await this.generateToken({
         sub: user.email,
         role: user.role,
         email: user.email,
