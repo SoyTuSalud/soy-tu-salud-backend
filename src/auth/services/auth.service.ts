@@ -9,9 +9,10 @@ import bcrypt from 'bcrypt';
 import { SignInDto } from '../dto/sign-in.dto';
 import { SignUpDto } from '../dto/sign-up.dto';
 import { User } from '@/user/schemas/user.schema';
-import { ConfigService } from '@nestjs/config';
 import { RoleSpecificDataDto } from '../dto/create-role.dto';
 import { RoleService } from './role.service';
+import { JwtPayload } from '../auth.interface';
+import { VerifyAccountService } from './verify-account.service';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly roleService: RoleService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService
+    private readonly verifyAccountService: VerifyAccountService
   ) {}
 
   async signUp(
@@ -44,6 +45,8 @@ export class AuthService {
       roleSpecificDataDto
     );
 
+    this.verifyAccountService.sendVerificationEmail(user.email);
+
     return user;
   }
 
@@ -61,36 +64,22 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect email or password');
     }
 
-    return {
-      role: user.role,
+    const accessToken = await this.generateToken({
+      sub: user._id,
       email: user.email,
-      accountStatus: user.accountStatus,
-      accessToken: await this.generateToken({
-        sub: user.email,
-        role: user.role,
-        email: user.email,
-        statusAccount: user.accountStatus
-      })
-    };
+      role: user.role,
+      statusAccount: user.accountStatus
+    });
+
+    return { user, accessToken };
   }
 
   async validatePassword(match: string, password: string): Promise<boolean> {
     return await bcrypt.compare(match, password);
   }
 
-  async generateToken(payload: Payload) {
+  async generateToken(payload: Partial<JwtPayload>) {
     return await this.jwtService.signAsync(payload, { expiresIn: '6h' });
-  }
-
-  getCookieWithJwtToken(payload: Payload) {
-    const token = this.jwtService.sign(payload);
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
-      'JWT_EXPIRATION_TIME'
-    )}`;
-  }
-
-  public getCookieForLogOut() {
-    return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
   }
 }
 

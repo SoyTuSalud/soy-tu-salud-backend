@@ -4,6 +4,7 @@ export const routes = {
     prefix: 'auth',
     sign_up: 'signup',
     sign_in: 'signin',
+    logout: 'logout',
     verify: 'verify'
   },
   users: {

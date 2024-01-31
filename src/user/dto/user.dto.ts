@@ -5,14 +5,14 @@ import { AutoMap } from '@automapper/classes';
 
 export class UserDto {
   @AutoMap()
-  @IsEnum(Role)
-  @IsNotEmpty()
-  readonly role: Role;
-
-  @AutoMap()
   @IsEmail()
   @IsNotEmpty()
   readonly email: string;
+
+  @AutoMap()
+  @IsEnum(Role)
+  @IsNotEmpty()
+  readonly role: Role;
 
   @AutoMap()
   @IsEnum(AccountStatus)

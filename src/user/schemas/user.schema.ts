@@ -9,22 +9,21 @@ export class User {
   _id: string;
 
   @AutoMap()
-  @Prop({ required: true, enum: Role })
-  role: string;
-
-  @AutoMap()
   @Prop({
     required: true,
     unique: true,
     lowercase: true,
-    trim: true,
-    validate: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    trim: true
   })
   email: string;
 
   @AutoMap()
   @Prop({ required: true })
   password: string;
+
+  @AutoMap()
+  @Prop({ required: true, enum: Role })
+  role: string;
 
   @AutoMap()
   @Prop({ required: true, enum: AccountStatus })

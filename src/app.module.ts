@@ -8,6 +8,8 @@ import { UserModule } from './user/user.module';
 import { APP_PIPE } from '@nestjs/core';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
+import { TokenModule } from './token/token.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -22,7 +24,9 @@ import { classes } from '@automapper/classes';
     AutomapperModule.forRoot({
       strategyInitializer: classes()
     }),
+    CommonModule,
     AuthModule,
+    TokenModule,
     UserModule,
     MotherModule
   ],
