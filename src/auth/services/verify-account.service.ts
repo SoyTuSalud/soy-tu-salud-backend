@@ -1,49 +1,50 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { MailService } from '@/common/services/mail.service';
-import { TokenService } from '@/token/token.service';
-import { TokenType } from '@/token/constants/token-type.constant';
+import { EmailService } from '@/common/services/email.service';
+import { TokenService } from '@/auth/services/token.service';
+import { TokenType } from '@/auth/constants/token-type.constant';
 import { UserService } from '@/user/user.service';
 import { AccountStatus } from '@/user/constants/accountStatus.constant';
+import { customAlphabet } from 'nanoid';
 
 @Injectable()
 export class VerifyAccountService {
   constructor(
     private readonly userService: UserService,
     private readonly tokenService: TokenService,
-    private readonly mailService: MailService
+    private readonly mailService: EmailService
   ) {}
 
-  async sendVerificationEmail(email: string) {
-    const { customAlphabet } = await import('nanoid');
+  async sendVerificationEmail(userId: string, email: string): Promise<void> {
     const nanoid = customAlphabet('0123456789', 6);
-    const token = nanoid();
+    const code = nanoid();
 
     await this.tokenService.createToken({
-      email,
-      token,
+      userId,
+      code,
       type: TokenType.EMAIL_VERIFICATION
     });
 
-    this.mailService.createLocalConnection();
-    return await this.mailService.sendEmail({
+    await this.mailService.sendEmail({
       to: email,
-      text: `http://localhost:8000/auth/verify-email?token=${token}`
+      subject: 'Account Verification',
+      text: `This is your verification code: ${code}`
     });
   }
 
-  async verifyEmail(email: string, token: string) {
-    //verify that the token corresponds with an actual user | invalid token.
-    await this.tokenService.validateToken({
-      email,
-      token,
-      type: TokenType.EMAIL_VERIFICATION
-    });
-    //check if the user is already verified
-    const user = await this.userService.findOneByEmail(email);
+  async verifyAccount(userId: string, code: string): Promise<void> {
+    const token = { userId, code, type: TokenType.EMAIL_VERIFICATION };
+
+    await this.tokenService.findToken(token);
+
+    const user = await this.userService.findOneById(userId);
     if (user.accountStatus === AccountStatus.VERIFIED) {
       throw new ForbiddenException('User account is already verified.');
     }
-    //check if the current token has expired or not | Token has expired. Please try again.
-    //change verifications status to verified
+
+    await this.tokenService.deleteToken(token);
+
+    await this.userService.update(user._id, {
+      accountStatus: AccountStatus.VERIFIED
+    });
   }
 }

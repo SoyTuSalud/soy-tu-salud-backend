@@ -1,4 +1,10 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString
+} from 'class-validator';
 import { Role } from '../constants/role.constants';
 import { AccountStatus } from '../constants/accountStatus.constant';
 import { AutoMap } from '@automapper/classes';
@@ -20,6 +26,7 @@ export class CreateUserDto {
   readonly role: Role;
 
   @AutoMap()
+  @IsOptional()
   @IsEnum(AccountStatus)
   @IsNotEmpty()
   readonly accountStatus: AccountStatus;

@@ -4,22 +4,18 @@ import { Transform } from 'class-transformer';
 
 @Schema({ timestamps: true, versionKey: false })
 export class Token {
-  _id: string;
+  @Prop({ required: true, index: true })
+  userId: string;
 
-  @Prop({ required: true, trim: true })
-  email: string;
+  @Prop({ required: true, index: true })
+  code: string;
 
-  @Prop({ required: true, unique: true })
-  token: string;
-
-  @Prop({ required: true, enum: TokenType })
-  type: string;
+  @Prop({ type: String, required: true, enum: TokenType })
+  type: TokenType;
 
   @Transform(({ value }) => value && Number(value))
-  createdAt: number;
-
-  @Transform(({ value }) => value && Number(value))
-  updatedAt: number;
+  @Prop({ type: Date, required: true, index: { expireAfterSeconds: 0 } })
+  expiresAt: number;
 }
 
 export type TokenDocument = Token & Document;

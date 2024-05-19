@@ -7,6 +7,10 @@ export const routes = {
     logout: 'logout',
     verify: 'verify'
   },
+  blacklists: {
+    prefix: 'blacklists',
+    tokens: { prefix: 'tokens', get: ':jti', delete: ':jti' }
+  },
   users: {
     prefix: 'users',
     get_all: '',

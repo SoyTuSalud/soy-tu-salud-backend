@@ -1,14 +1,14 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { TokenType } from '../constants/token-type.constant';
 
 export class TokenDto {
-  @IsEmail()
+  @IsString()
   @IsNotEmpty()
-  readonly email: string;
+  readonly userId: string;
 
   @IsString()
   @IsNotEmpty()
-  readonly token: string;
+  readonly code: string;
 
   @IsEnum(TokenType)
   @IsNotEmpty()

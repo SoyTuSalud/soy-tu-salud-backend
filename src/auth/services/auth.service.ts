@@ -11,8 +11,10 @@ import { SignUpDto } from '../dto/sign-up.dto';
 import { User } from '@/user/schemas/user.schema';
 import { RoleSpecificDataDto } from '../dto/create-role.dto';
 import { RoleService } from './role.service';
-import { JwtPayload } from '../auth.interface';
-import { VerifyAccountService } from './verify-account.service';
+import { AccessToken, JwtPayload } from '../interfaces/jwt.interface';
+import { TokenBlacklistService } from '@/auth/services/token-blacklist.service';
+import { nanoid } from 'nanoid';
+import { TokenBlacklistCacheService } from './token-blacklist-cache.service';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +22,8 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly roleService: RoleService,
     private readonly jwtService: JwtService,
-    private readonly verifyAccountService: VerifyAccountService
+    private readonly tokenBlacklistService: TokenBlacklistService,
+    private readonly tokenBlacklistCacheService: TokenBlacklistCacheService
   ) {}
 
   async signUp(
@@ -36,7 +39,7 @@ export class AuthService {
 
     const user = await this.userService.create({
       ...signUpDto,
-      password: await bcrypt.hash(signUpDto.password, 10)
+      password: await this.encryptPassword(signUpDto.password)
     });
 
     this.roleService.createRoleSpecificDocument(
@@ -44,8 +47,6 @@ export class AuthService {
       user.role,
       roleSpecificDataDto
     );
-
-    this.verifyAccountService.sendVerificationEmail(user.email);
 
     return user;
   }
@@ -74,12 +75,25 @@ export class AuthService {
     return { user, accessToken };
   }
 
+  async logout(payload: AccessToken) {
+    this.tokenBlacklistCacheService.revokeToken(payload.jti);
+
+    await this.tokenBlacklistService.revokeToken({
+      jti: payload.jti,
+      exp: payload.exp * 1000
+    });
+  }
+
+  async encryptPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 10);
+  }
+
   async validatePassword(match: string, password: string): Promise<boolean> {
     return await bcrypt.compare(match, password);
   }
 
   async generateToken(payload: Partial<JwtPayload>) {
-    return await this.jwtService.signAsync(payload, { expiresIn: '6h' });
+    return await this.jwtService.signAsync(payload, { jwtid: nanoid() });
   }
 }
 
